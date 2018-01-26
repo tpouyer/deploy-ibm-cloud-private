@@ -1163,8 +1163,8 @@ Vagrant.configure(2) do |config|
       virtualbox.customize ["modifyvm", :id, "--cpus", "#{cpus}"] # set number of vcpus
       virtualbox.customize ["modifyvm", :id, "--memory", "#{memory}"] # set amount of memory allocated vm memory
       virtualbox.customize ["modifyvm", :id, "--ostype", "Ubuntu_64"] # set guest OS type
-      virtualbox.customize ["modifyvm", :id, "--natdnshostresolver1", "off"] # enables DNS resolution from guest using host's DNS
-      virtualbox.customize ["modifyvm", :id, "--natdnsproxy1", "off"] # enables DNS requests to be proxied via the host
+      virtualbox.customize ["modifyvm", :id, "--natdnshostresolver1", "on"] # enables DNS resolution from guest using host's DNS
+      virtualbox.customize ["modifyvm", :id, "--natdnsproxy1", "on"] # enables DNS requests to be proxied via the host
       virtualbox.customize ["modifyvm", :id, "--nicpromisc2", "allow-all"] # turn on promiscuous mode on nic 2
       virtualbox.customize ["modifyvm", :id, "--nictype1", "virtio"]
       virtualbox.customize ["modifyvm", :id, "--nictype2", "virtio"]
