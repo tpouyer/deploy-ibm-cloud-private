@@ -367,12 +367,12 @@ profiles:
   - name: default
     config: 
       boot.autostart: true
-      linux.kernel_modules: bridge,br_netfilter,x_tables,ip_tables,ip6_tables,ip_vs,ip_set,ipip,xt_mark,xt_multiport,ip_tunnel,tunnel4,netlink_diag,nf_conntrack,nfnetlink,nf_nat,overlay
-      raw.lxc: |
-        lxc.aa_profile=unconfined
-        lxc.mount.auto=proc:rw sys:rw cgroup-full:rw
-        lxc.cap.drop=
-        lxc.cgroup.devices.allow=a
+      linux.kernel_modules: bridge,br_netfilter,x_tables,ip_tables,ip_vs,ip_set,ipip,xt_mark,xt_multiport,ip_tunnel,tunnel4,netlink_diag,nf_conntrack,nfnetlink,nf_nat,overlay
+      raw.lxc: |-
+        lxc.aa_profile = unconfined
+        lxc.cgroup.devices.allow = a
+        lxc.mount.auto = proc:rw sys:rw cgroup:rw
+        lxc.cap.drop =
       security.nesting: "true"
       security.privileged: "true"
       user.network-config: |
@@ -545,14 +545,14 @@ SCRIPT
 configure_icp_install = <<SCRIPT
 cat > /home/vagrant/cluster/hosts <<'EOF'
 [master]
-#{base_segment}.100 kubelet_extra_args='["--fail-swap-on=false","--eviction-hard=memory.available<1Mi,nodefs.available<1Mi,nodefs.inodesFree<1%,imagefs.available<1Mi,imagefs.inodesFree<1%", "--image-gc-high-threshold=100%", "--image-gc-low-threshold=100%"]'
+#{base_segment}.100 kubelet_extra_args='["--fail-swap-on=false","--eviction-hard=memory.available<1Mi,nodefs.available<1Mi,nodefs.inodesFree<1%,imagefs.available<1Mi,imagefs.inodesFree<1%", "--image-gc-high-threshold=100%", "--image-gc-low-threshold=100%"]
 
 [worker]
 #{base_segment}.101 kubelet_extra_args='["--fail-swap-on=false"]'
 #{base_segment}.102 kubelet_extra_args='["--fail-swap-on=false"]'
 
 [proxy]
-#{base_segment}.100 kube_proxy_extra_args='["--proxy-mode=iptables"]'
+#{base_segment}.100 kube_proxy_extra_args='["--proxy-mode=iptables","--masquerade-all","--conntrack-max-per-core=0","--conntrack-tcp-timeout-close-wait=0","--conntrack-tcp-timeout-established=0"]' kubelet_extra_args='["--fail-swap-on=false"]'
 EOF
 
 echo "#{rsa_private_key}" > /home/vagrant/cluster/ssh_key
