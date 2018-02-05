@@ -545,14 +545,14 @@ SCRIPT
 configure_icp_install = <<SCRIPT
 cat > /home/vagrant/cluster/hosts <<'EOF'
 [master]
-#{base_segment}.100 kubelet_extra_args='["--fail-swap-on=false","--eviction-hard=memory.available<1Mi,nodefs.available<1Mi,nodefs.inodesFree<1%,imagefs.available<1Mi,imagefs.inodesFree<1%", "--image-gc-high-threshold=100%", "--image-gc-low-threshold=100%"]
+#{base_segment}.100 kubelet_extra_args='["--fail-swap-on=false","--eviction-hard=memory.available<1Mi,nodefs.available<1Mi,nodefs.inodesFree<1%,imagefs.available<1Mi,imagefs.inodesFree<1%", "--image-gc-high-threshold=100%", "--image-gc-low-threshold=100%"]'
 
 [worker]
 #{base_segment}.101 kubelet_extra_args='["--fail-swap-on=false"]'
 #{base_segment}.102 kubelet_extra_args='["--fail-swap-on=false"]'
 
 [proxy]
-#{base_segment}.100 kube_proxy_extra_args='["--proxy-mode=iptables","--masquerade-all","--conntrack-max-per-core=0","--conntrack-tcp-timeout-close-wait=0","--conntrack-tcp-timeout-established=0"]' kubelet_extra_args='["--fail-swap-on=false"]'
+#{base_segment}.100 kube_proxy_extra_args='["--proxy-mode=iptables"]'
 EOF
 
 echo "#{rsa_private_key}" > /home/vagrant/cluster/ssh_key
@@ -1003,6 +1003,7 @@ install_shutdown_script = <<SCRIPT
 sudo bash -c 'cat > /usr/local/bin/icp-ce-shutdown.sh' <<'EOF'
 #!/bin/bash
 
+docker stop $(docker ps -aq)
 lxc stop worker1 --stateful
 lxc stop worker2 --stateful
 EOF
